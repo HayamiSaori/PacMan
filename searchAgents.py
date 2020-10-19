@@ -336,22 +336,14 @@ class CornersProblem(search.SearchProblem):
             x,y = state[0]
             holdCorners = state[1]
             dx, dy = Actions.directionToVector(action)
-            nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
-            # newCorners = ()
+            nextx, nexty = int(x + dx), int(y + dy)
             nextState = (nextx, nexty)
+
             #不碰墙
             if not hitsWall:
                 #能到达角落，四种情况判断
                 if nextState in self.corners:
-                    # if nextState == (self.right, 1):
-                    #     newCorners = (True, holdCorners[1], holdCorners[2], holdCorners[3])
-                    # elif nextState == (self.right, self.top):
-                    #     newCorners = (holdCorners[0], True, holdCorners[2], holdCorners[3])
-                    # elif nextState == (1, self.top):
-                    #     newCorners = (holdCorners[0], holdCorners[1], True, holdCorners[3])
-                    # elif nextState == (1,1):
-                    #     newCorners = (holdCorners[0], holdCorners[1], holdCorners[2], True)
                     if nextState == (1,1):
                         newCorners = (True, holdCorners[1], holdCorners[2], holdCorners[3])
                     elif nextState == (1, self.top):
@@ -406,35 +398,22 @@ def cornersHeuristic(state, problem):
     top = problem.walls.height-2
     right = problem.walls.width-2
     node = []
-    # for c in corners:               # 把所有未到的角落加入到node列表中
-    #     if c == (1,1):
-    #         if not stateCorners[0]:
-    #             node.append(c)
-    #     if c == (1, top):
-    #         if not stateCorners[1]:
-    #             node.append(c)
-    #     if c == (right, top):
-    #         if not stateCorners[3]:
-    #             node.append(c)
-    #     if c == (right, 1):
-    #         if not stateCorners[2]:
-    #             node.append(c)
     for i in range(0,len(corners)): # 把所有未到的角落加入到node列表中
         if not stateCorners[i]:
             node.append(corners[i])
     cost = 0
-    curPosition = position
-    while len(node) > 0:            # 从输入的位置开始，计算其与node列表的曼哈顿距离，排序选出距离最小的角落
+    curPosition = position          # 类似于贪心思想，计算一个状态节点的启发值
+    while len(node) > 0:            # 从输入的位置开始，计算其与node列表的曼哈顿距离，选出距离最小的角落
         distArr= []                 # 把该曼哈顿值加进cost中，把该角落从node列表删除，再以该角落作为输入，计算它与node列表的曼哈顿距离
         for i in node:              # 以此类推，直到node列表为空
-            dist = util.manhattanDistance(curPosition,i)
-            distArr.append(dist)
+            distance = util.manhattanDistance(curPosition,i)
+            distArr.append(distance)
         mindist = min(distArr)
         cost += mindist
         minDistI= distArr.index(mindist)
         curPosition = node[minDistI]
         del node[minDistI]
-    # for i in node:
+    # for i in node:                # 以该节点到所有未到节点的曼哈顿距离之和为启发值
     #     cost += util.manhattanDistance(curPosition, i)
     # print("cost: ",cost," of ",state)
     return cost
@@ -533,7 +512,35 @@ def foodHeuristic(state, problem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    result = 0
+    foods = []
+    total_distance = 0
+    food_pair=((0,0),(0,0),0)
+
+    for i in range(0,foodGrid.width):           # 遍历foodGrid，得当前食物的坐标
+        for j in range(0,foodGrid.height):
+            if (foodGrid[i][j] == True):
+                foods.append((i,j))
+    # 当前状态已经没有食物
+    if (len(foods) == 0):
+            return 0        
+    for current_food in foods:                  # 在游戏里找到曼哈顿距离最远的“食物对”
+        for select_food in foods:     
+            if(current_food==select_food):
+                continue
+            else:
+                distance = util.manhattanDistance(current_food,select_food)
+                if(food_pair[2] < distance):
+                    food_pair = (current_food,select_food,distance)
+    # 以当前位置到该食物对的曼哈顿距离的较小值，与该食物对的曼哈顿距离之和作为启发函数
+    # 即优先往食物“密度”高的区域搜索
+    if(food_pair[0]==(0,0) and food_pair[1]==(0,0)):              
+        result = util.manhattanDistance(position,foods[0])
+    else: 
+        d1 = util.manhattanDistance(position,food_pair[0])
+        d2 = util.manhattanDistance(position,food_pair[1])
+        result = food_pair[2] + min(d1,d2)
+    return result
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
@@ -564,7 +571,8 @@ class ClosestDotSearchAgent(SearchAgent):
         problem = AnyFoodSearchProblem(gameState)
 
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return search.breadthFirstSearch(problem)       # 宽度优先，保证找到的是最近的食物
+        # util.raiseNotDefined()                        
 
 class AnyFoodSearchProblem(PositionSearchProblem):
     """
@@ -598,8 +606,11 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         complete the problem definition.
         """
         x,y = state
-
         "*** YOUR CODE HERE ***"
+        if(self.food[x][y] == True):
+            return True
+        else:
+            return False
         util.raiseNotDefined()
 
 def mazeDistance(point1, point2, gameState):
