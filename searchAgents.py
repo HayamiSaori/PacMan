@@ -312,7 +312,7 @@ class CornersProblem(search.SearchProblem):
         return isGoal
         # util.raiseNotDefined()
 
-    def getSuccessors(self, state):
+    def     :
         """
         Returns successor states, the actions they require, and a cost of 1.
 
@@ -611,7 +611,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
             return True
         else:
             return False
-        util.raiseNotDefined()
+        # util.raiseNotDefined()
 
 def mazeDistance(point1, point2, gameState):
     """
