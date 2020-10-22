@@ -87,7 +87,7 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-    result_list = []                    #结果列表
+        result_list = []                    #结果列表
     close_set = set()                   #保存所有已经探索过的位置的集合
     stack = util.Stack()                #保存当前探索路径的栈，节点为三元组successor
     cur_state = problem.getStartState() 
@@ -124,8 +124,22 @@ def depthFirstSearch(problem):
     # print("result list:",result_list)
     # print("cost:",problem.getCostOfActions(result_list))
     return result_list
+    # cur_state = problem.getStartState()
+    # close_set = set()                   #保存所有已经探索过的位置的集合
+    # stack = util.Stack()                #栈
+    # result_list = []                    #结果列表
+    # stack.push((cur_state, []))
+    # while(not problem.isGoalState(cur_state)):  #在找到终点前一直搜索
+    #     cur_node = stack.pop()
+    #     close_set.add(cur_node[0])
+    #     successor = problem.getSuccessors(cur_node[0])
+    #     for i in successor:
+    #         if not i[0] in close_set:   #判断i是否已经探索过
+    #             stack.push((i[0], cur_node[1] + [i[1]]))
+    #         cur_state = i[0]
+    #     result_list = cur_node[1] + [i[1]]
+    # return result_list
 
-    # util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
@@ -174,49 +188,65 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
-    result_list = []                                        #结果列表
-    priority_queue = util.PriorityQueue()                   #优先队列
-    # close_set = set()             
-    prenode_dict = {}                                       #父节点字典，prenode_dict[state]表示state的父节点信息
-    cur_state = problem.getStartState() 
-    # print(cur_state)
-    cur_node = (cur_state,'Start',0)
-    # close_set.add(cur_state)
-    priority_queue.push(cur_state,0)
-    prenode_dict[cur_state] = cur_node
+    # result_list = []                                        #结果列表
+    # priority_queue = util.PriorityQueue()                   #优先队列
+    # # close_set = set()             
+    # prenode_dict = {}                                       #父节点字典，prenode_dict[state]表示state的父节点信息
+    # cur_state = problem.getStartState() 
+    # # print(cur_state)
+    # cur_node = (cur_state,'Start',0)
+    # # close_set.add(cur_state)
+    # priority_queue.push(cur_state,0)
+    # prenode_dict[cur_state] = cur_node
+    # while(True):
+    #     cur_state = priority_queue.pop()                    #优先队列出队
+    #     cur_node = prenode_dict[cur_state]
+    #     # print("current position:",cur_state)
+    #     # cur_state = cur_node[0]
+    #     if(problem.isGoalState(cur_state)):                 #当前节点是终点，则根据父节点字典回推得到路径
+    #         # cur_node = (cur_state,)
+    #         # print("Search Done")
+    #         while(cur_node[0] != problem.getStartState()): 
+    #             result_list.append(cur_node[1])
+    #             # print(prenode_dict[cur_node[0]]," is the prenode of ",cur_node)
+    #             cur_node = prenode_dict[cur_node[0]]
+    #         result_list.append(cur_node[1])                 #将第一步加进结果列表
+    #         result_list.reverse()                           #结果列表倒转，得到答案
+    #         break            
+    #     cur_successors = problem.getSuccessors(cur_state)   #当前节点不是终点，则获取后继节点
+    #     for i in cur_successors:                            #遍历后继节点，若某一后继节点已经在父节点字典的key中，则根据代价值更新优先队列
+    #         if(i[0] in prenode_dict):                      
+    #             if(i[2] + prenode_dict[cur_state][2] < prenode_dict[i[0]][2]):
+    #                 prenode_dict[i[0]][1] = i[1]
+    #                 prenode_dict[i[0]][2] = i[2] + prenode_dict[cur_state][2]
+    #                 priority_queue.update(i[0],prenode_dict[i[0]][2])
+    #                 # print(i," is updated.")
+    #             else:
+    #                 continue
+    #         else:                                           #若该节点不在父节点字典的key中，即该节点没有探索过
+    #             # close_set.add(i[0])
+    #             prenode_dict[i[0]] = (cur_state,i[1],i[2] + prenode_dict[cur_state][2])
+    #             priority_queue.update(i[0],prenode_dict[i[0]][2])
+    #             # print(i," is added to the priority queue.")
+    # return result_list
+    cur_state = problem.getStartState()
+    close_set = set()                       #保存所有已经探索过的位置的集合
+    queue = util.PriorityQueue()            #优先队列
+    queue.push((cur_state, []) ,0)
+    result_list = []
     while(True):
-        cur_state = priority_queue.pop()                    #优先队列出队
-        cur_node = prenode_dict[cur_state]
-        # print("current position:",cur_state)
-        # cur_state = cur_node[0]
-        if(problem.isGoalState(cur_state)):                 #当前节点是终点，则根据父节点字典回推得到路径
-            # cur_node = (cur_state,)
-            # print("Search Done")
-            while(cur_node[0] != problem.getStartState()): 
-                result_list.append(cur_node[1])
-                # print(prenode_dict[cur_node[0]]," is the prenode of ",cur_node)
-                cur_node = prenode_dict[cur_node[0]]
-            result_list.append(cur_node[1])                 #将第一步加进结果列表
-            result_list.reverse()                           #结果列表倒转，得到答案
-            break            
-        cur_successors = problem.getSuccessors(cur_state)   #当前节点不是终点，则获取后继节点
-        for i in cur_successors:                            #遍历后继节点，若某一后继节点已经在父节点字典的key中，则根据代价值更新优先队列
-            if(i[0] in prenode_dict):                      
-                if(i[2] + prenode_dict[cur_state][2] < prenode_dict[i[0]][2]):
-                    prenode_dict[i[0]][1] = i[1]
-                    prenode_dict[i[0]][2] = i[2] + prenode_dict[cur_state][2]
-                    priority_queue.update(i[0],prenode_dict[i[0]][2])
-                    # print(i," is updated.")
-                else:
-                    continue
-            else:                                           #若该节点不在父节点字典的key中，即该节点没有探索过
-                # close_set.add(i[0])
-                prenode_dict[i[0]] = (cur_state,i[1],i[2] + prenode_dict[cur_state][2])
-                priority_queue.update(i[0],prenode_dict[i[0]][2])
-                # print(i," is added to the priority queue.")
+        cur_node = queue.pop()
+        result_list = cur_node[1]
+        if problem.isGoalState(cur_node[0]):
+            return result_list
+        if cur_node[0] not in close_set:
+            successors = problem.getSuccessors(cur_node[0])
+            for i in successors:
+                if i[0] not in close_set:
+                    new_actions = result_list + [i[1]]
+                    queue.update((i[0], result_list + [i[1]]), problem.getCostOfActions(new_actions))
+        close_set.add(cur_node[0])
     return result_list
-
-    # util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
@@ -229,48 +259,65 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
-    result_list = []        #结果列表
-    # priority_queue = util.PriorityQueueWithFunction(heuristic)
-    priority_queue = util.PriorityQueue()  #优先队列
-    prenode_dict = {}       #父节点字典，prenode_dict[state]表示state的父节点信息
-    cur_state = problem.getStartState()
-    cur_node = (cur_state,'Start',0)
-    priority_queue.push(cur_state,heuristic(cur_state,problem)) 
-    prenode_dict[cur_state] = (cur_state,'Start',heuristic(cur_state,problem))
+    # result_list = []        #结果列表
+    # # priority_queue = util.PriorityQueueWithFunction(heuristic)
+    # priority_queue = util.PriorityQueue()  #优先队列
+    # prenode_dict = {}       #父节点字典，prenode_dict[state]表示state的父节点信息
+    # cur_state = problem.getStartState()
+    # cur_node = (cur_state,'Start',0)
+    # priority_queue.push(cur_state,heuristic(cur_state,problem)) 
+    # prenode_dict[cur_state] = (cur_state,'Start',heuristic(cur_state,problem))
     
-    while(True):
-        cur_state = priority_queue.pop()
-        cur_node = prenode_dict[cur_state]
-        if(problem.isGoalState(cur_state)): #当前节点是终点，则根据父节点字典回推得到路径
-            # cur_node = (cur_state,)
-            # print("Search Done")
-            while(cur_node[0] != problem.getStartState()): 
-                result_list.append(cur_node[1])
-                # print(prenode_dict[cur_node[0]]," is the prenode of ",cur_node)
-                cur_node = prenode_dict[cur_node[0]]
-            result_list.append(cur_node[1]) #将第一步加进结果列表
-            result_list.reverse()           #结果列表倒转，得到答案
-            break               
-        cur_successors = problem.getSuccessors(cur_state)#当前节点不是终点，则获取后继节点
-        for i in cur_successors:            #遍历后继节点，若某一后继节点已经在父节点字典的key中，则根据启发函数更新优先队列
-            next_state = i[0]
-            if(next_state in prenode_dict):
-                if(heuristic(next_state,problem) + prenode_dict[cur_state][2] < prenode_dict[next_state][2]):
-                    prenode_dict[next_state][1] = i[1]
-                    prenode_dict[next_state][2] = i[2] + heuristic(next_state,problem) + prenode_dict[cur_state][2]
-                    priority_queue.update(next_state,prenode_dict[next_state][2])
-                    # print(i," is updated.")
-                else:
-                    continue
-            else:                           #若该节点不在父节点字典的key中，即该节点没有探索过
-                # close_set.add(next_state)
-                prenode_dict[next_state] = (cur_state,i[1],heuristic(next_state,problem) + prenode_dict[cur_state][2])
-                priority_queue.update(next_state,prenode_dict[next_state][2])
-                # print(i," is added to the priority queue.")
-    return result_list
+    # while(True):
+    #     cur_state = priority_queue.pop()
+    #     cur_node = prenode_dict[cur_state]
+    #     if(problem.isGoalState(cur_state)): #当前节点是终点，则根据父节点字典回推得到路径
+    #         # cur_node = (cur_state,)
+    #         # print("Search Done")
+    #         while(cur_node[0] != problem.getStartState()): 
+    #             result_list.append(cur_node[1])
+    #             # print(prenode_dict[cur_node[0]]," is the prenode of ",cur_node)
+    #             cur_node = prenode_dict[cur_node[0]]
+    #         result_list.append(cur_node[1]) #将第一步加进结果列表
+    #         result_list.reverse()           #结果列表倒转，得到答案
+    #         break               
+    #     cur_successors = problem.getSuccessors(cur_state)#当前节点不是终点，则获取后继节点
+    #     for i in cur_successors:            #遍历后继节点，若某一后继节点已经在父节点字典的key中，则根据启发函数更新优先队列
+    #         next_state = i[0]
+    #         if(next_state in prenode_dict):
+    #             if(heuristic(next_state,problem) + prenode_dict[cur_state][2] < prenode_dict[next_state][2]):
+    #                 prenode_dict[next_state][1] = i[1]
+    #                 prenode_dict[next_state][2] = i[2] + heuristic(next_state,problem) + prenode_dict[cur_state][2]
+    #                 priority_queue.update(next_state,prenode_dict[next_state][2])
+    #                 # print(i," is updated.")
+    #             else:
+    #                 continue
+    #         else:                           #若该节点不在父节点字典的key中，即该节点没有探索过
+    #             # close_set.add(next_state)
+    #             prenode_dict[next_state] = (cur_state,i[1],heuristic(next_state,problem) + prenode_dict[cur_state][2])
+    #             priority_queue.update(next_state,prenode_dict[next_state][2])
+    #             # print(i," is added to the priority queue.")
+    # return result_list
     # util.raiseNotDefined()
-
-
+    cur_state = problem.getStartState()
+    close_set = set()                       #保存所有已经探索过的位置的集合
+    queue = util.PriorityQueue()            #优先队列
+    queue.push((cur_state, []) ,nullHeuristic(cur_state,problem))
+    result_list = []
+    while(True):
+        cur_node = queue.pop()
+        result_list = cur_node[1]
+        if problem.isGoalState(cur_node[0]):
+            return result_list
+        if cur_node[0] not in close_set:
+            successors = problem.getSuccessors(cur_node[0])
+            for i in successors:
+                if i[0] not in close_set:
+                    new_actions = result_list + [i[1]]
+                    new_cost = problem.getCostOfActions(new_actions) + heuristic(i[0], problem)
+                    queue.update((i[0], result_list + [i[1]]), new_cost)
+        close_set.add(cur_node[0])
+    return result_list
 # Abbreviations
 bfs = breadthFirstSearch
 dfs = depthFirstSearch
