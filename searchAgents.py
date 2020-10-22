@@ -312,7 +312,7 @@ class CornersProblem(search.SearchProblem):
         return isGoal
         # util.raiseNotDefined()
 
-    def     :
+    def getSuccessors(self, state):
         """
         Returns successor states, the actions they require, and a cost of 1.
 
@@ -336,8 +336,8 @@ class CornersProblem(search.SearchProblem):
             x,y = state[0]
             holdCorners = state[1]
             dx, dy = Actions.directionToVector(action)
-            hitsWall = self.walls[nextx][nexty]
             nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
             nextState = (nextx, nexty)
 
             #不碰墙

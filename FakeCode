@@ -1,0 +1,95 @@
+Q1伪代码:
+depthFirstSearch(problem):
+    Initial stack,close_set and result_list
+    stack.push(start_state)
+    close_set.add(start_state)
+    while(True):
+        cur_node = stack.pop()
+        if cur_node is goal:
+            while(stack is not empty):
+                i = stack.pop()
+                result_list.append(i)
+            reverse the result_list
+            break
+        else:
+            successors = getSuccessors(cur_node)
+            for every i in successors:
+                if i is in close_set:
+                    pass
+                else:
+                    close_set.add(i)
+                    stack.push(i)
+    return result_list
+
+Q2伪代码:
+breadthFirstSearch(problem):
+    Initial queue,close_set,prenode_dict and result_list
+    queue.push(start_state)
+    close_set.push(start_state)
+    while(True):
+        cur_node = queue.pop()
+        if cur_node is goal:
+            while(cur_node isn't the start_state):
+                result_list.append(cur_node)
+                cur_node = prenode_dict[cur_node]
+            reverse the result_list
+            break
+        else:
+            successors = getSuccessors(cur_node)
+            for every i in successors:
+                if i is in the close_set:
+                    pass
+                else:
+                    close_set.add(i)
+                    prenode_dict[cur_node] = i
+                    queue.push(i)
+    return result_list
+
+Q3伪代码:
+uniformCostSearch(problem):
+    Initial priority_queue,prenode_dict and result_list
+    priority_queue.push(start_state)
+    while(True):
+        cur_node = priority_queue.pop()
+        if cur_node is goal:
+            while(cur_node isn't the start_state):
+                result_list.append(cur_node)
+                cur_node = prenode_dict[cur_node]
+            reverse the result_list
+            break
+        else:
+            successors = getSuccessors(cur_node)
+            for every i in successors:
+                if i is a key of prenode_dict:
+                    if Cost(prenode_dict[i]) > Cost(prenode_dict[cur_node]) + Cost(i):
+                        prenode_dict[i] = cur_node
+                        update the priority_queue
+                else:
+                    prenode_dict[i] = cur_node
+                    priority_queue.push(i)
+    return result_list
+ 
+Q4伪代码:
+uniformCostSearch(problem):
+    Initial priority_queue,prenode_dict and result_list
+    priority_queue.push(start_state)
+    while(True):
+        cur_node = priority_queue.pop()
+        if cur_node is goal:
+            while(cur_node isn't the start_state):
+                result_list.append(cur_node)
+                cur_node = prenode_dict[cur_node]
+            reverse the result_list
+            break
+        else:
+            successors = getSuccessors(cur_node)
+            for every i in successors:
+                if i is a key of prenode_dict:
+                    if Cost(prenode_dict[i]) > Cost(prenode_dict[cur_node]) + heuristic(i):
+                        prenode_dict[i] = cur_node
+                        update the priority_queue
+                else:
+                    prenode_dict[i] = cur_node
+                    priority_queue.push(i)
+    return result_list
+ 
