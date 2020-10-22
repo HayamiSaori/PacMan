@@ -65,25 +65,20 @@ uniformCostSearch(problem):
  
 Q4伪代码:
 uniformCostSearch(problem):
-    Initial priority_queue,prenode_dict and result_list
-    priority_queue.push(start_state)
+    Initial priority_queue,close_set and result_list
+    priority_queue.push((start_state,empty_list),0)
     while(True):
         cur_node = priority_queue.pop()
+        result_list = the actions of cur_node
         if cur_node is goal:
-            while(cur_node isn't the start_state):
-                result_list.append(cur_node)
-                cur_node = prenode_dict[cur_node]
-            reverse the result_list
-            break
-        else:
+            return result_list
+        if cur_node is in close_set:
             successors = getSuccessors(cur_node)
             for every i in successors:
-                if i is a key of prenode_dict:
-                    if Cost(prenode_dict[i]) > Cost(prenode_dict[cur_node]) + heuristic(i):
-                        prenode_dict[i] = cur_node
-                        update the priority_queue
-                else:
-                    prenode_dict[i] = cur_node
-                    priority_queue.push(i)
+                if i is not in close_set:
+                    new_act = result_list + i.direcion
+                    new_cost = CostOf(new_act) + heuristic(i)
+                    priority_queue.update((i,new_act),new_cost)
+        close_set.add(cur_node)
     return result_list
  
