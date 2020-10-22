@@ -87,7 +87,7 @@ def depthFirstSearch(problem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
-        result_list = []                    #结果列表
+    result_list = []                    #结果列表
     close_set = set()                   #保存所有已经探索过的位置的集合
     stack = util.Stack()                #保存当前探索路径的栈，节点为三元组successor
     cur_state = problem.getStartState() 
