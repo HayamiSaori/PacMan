@@ -64,7 +64,7 @@ uniformCostSearch(problem):
     return result_list
  
 Q4伪代码:
-uniformCostSearch(problem):
+AstarSearch(problem):
     Initial priority_queue,close_set and result_list
     priority_queue.push((start_state,empty_list),0)
     while(True):

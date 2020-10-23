@@ -533,7 +533,6 @@ def foodHeuristic(state, problem):
                 if(food_pair[2] < distance):
                     food_pair = (current_food,select_food,distance)
     # 以当前位置到该食物对的曼哈顿距离的较小值，与该食物对的曼哈顿距离之和作为启发函数
-    # 即优先往食物“密度”高的区域搜索
     if(food_pair[0]==(0,0) and food_pair[1]==(0,0)):              
         result = util.manhattanDistance(position,foods[0])
     else: 
